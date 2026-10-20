@@ -51,6 +51,10 @@
         function highlightFeature(e) {
             highlightLayer = e.target;
 
+            if (e.target.options.pane === 'pane__5') {
+                return;
+            }
+
             if (e.target.feature.geometry.type === 'LineString' || e.target.feature.geometry.type === 'MultiLineString') {
               highlightLayer.setStyle({
                 color: 'rgba(255, 255, 0, 1.00)',
