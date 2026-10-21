@@ -23,8 +23,32 @@
             height: 100vh;
             height: 100dvh;
         }
+        .campus-building-label {
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+            color: #3c2d27;
+            font: 600 12px/1.3 "Microsoft YaHei", "Noto Sans SC", sans-serif;
+            padding: 0;
+            text-align: center;
+            text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 0 0 4px #fff;
+            pointer-events: none;
+        }
+        .campus-building-label::before { display: none; }
+        .campus-name-control {
+            background: rgba(255,255,255,.94);
+            padding: 8px 10px;
+            max-width: min(280px, 72vw);
+            border-radius: 4px;
+            color: #44332d;
+            font: 12px/1.5 "Microsoft YaHei", sans-serif;
+            box-shadow: 0 1px 5px #0004;
+        }
+        .campus-name-control label { cursor: pointer; font-weight: 600; }
+        .campus-name-control input { vertical-align: middle; }
+        .campus-name-control a { color: #735040; }
         </style>
-        <title>校园地图</title>
+        <title>中央民族大学丰台校区 · 建筑名称</title>
     </head>
     <body>
         <div id="map">
@@ -374,10 +398,34 @@
                     </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
+            var details = document.createElement('div');
+            details.innerHTML = content;
+            var table = details.querySelector('table');
+            [['名称状态', 'name_status'], ['名称来源', 'name_source'], ['核对说明', 'name_note']].forEach(function(item) {
+                var value = feature.properties[item[1]];
+                if (!value) return;
+                var row = table.insertRow();
+                var heading = document.createElement('th');
+                heading.scope = 'row';
+                heading.textContent = item[0];
+                row.appendChild(heading);
+                row.insertCell().textContent = value;
+            });
+            content = details.innerHTML;
+            layer.on('popupopen', function(e) {
+                addClassToPopupIfMedia(content, e.popup);
+            });
+            layer.bindPopup(content, { maxHeight: 400 });
+            if (feature.properties.name) {
+                var label = document.createElement('span');
+                var fid = String(feature.properties.fid);
+                var needsReview = ['52', '53', '54', '56'].indexOf(fid) !== -1;
+                label.textContent = feature.properties.name.replace(/\+/g, ' · ') + (needsReview ? ' †' : '');
+                layer._campusLabelContent = label;
+                var major = ['5','6','23','40','41','47','48','49','50','51','52','53','56','59','63'];
+                var small = ['42','43','44','45','46','54','57','58','60','61'];
+                layer._campusLabelMinZoom = major.indexOf(fid) !== -1 ? 17 : (small.indexOf(fid) !== -1 ? 19 : 18);
+            }
         }
 
         function style__4_0() {
@@ -409,6 +457,58 @@
         });
         bounds_group.addLayer(layer__4);
         map.addLayer(layer__4);
+        var campusNamesEnabled = true;
+        function refreshCampusNames() {
+            var visible = campusNamesEnabled && map.hasLayer(layer__4);
+            if (!visible) {
+                layer__4.eachLayer(function(layer) {
+                    if (layer.getTooltip()) {
+                        layer.closeTooltip();
+                        layer.unbindTooltip();
+                    }
+                });
+                document.querySelectorAll('.campus-building-label').forEach(function(node) { node.remove(); });
+                return;
+            }
+            layer__4.eachLayer(function(layer) {
+                if (map.getZoom() < layer._campusLabelMinZoom) {
+                    if (layer.getTooltip()) {
+                        layer.closeTooltip();
+                        layer.unbindTooltip();
+                    }
+                    return;
+                }
+                if (!layer.getTooltip() && layer._campusLabelContent) {
+                    layer.bindTooltip(layer._campusLabelContent, {
+                        permanent: true,
+                        direction: 'center',
+                        className: 'campus-building-label',
+                        opacity: 1
+                    });
+                }
+                if (layer.getTooltip() && !map.hasLayer(layer.getTooltip())) layer.openTooltip();
+            });
+        }
+        map.on('zoomend', refreshCampusNames);
+        map.on('layeradd layerremove', function(e) {
+            if (e.layer === layer__4) refreshCampusNames();
+        });
+        var campusNameControl = L.control({ position: 'bottomleft' });
+        campusNameControl.onAdd = function() {
+            var box = L.DomUtil.create('div', 'campus-name-control');
+            box.innerHTML = '<label><input type="checkbox" id="campus-name-toggle" checked> 显示建筑名称</label>' +
+                '<div>放大查看更多楼名；† 表示泛称或待核项。</div>' +
+                '<a href="building-name-review.html" target="_blank" rel="noopener">查看名称来源与待核说明</a>';
+            L.DomEvent.disableClickPropagation(box);
+            L.DomEvent.disableScrollPropagation(box);
+            box.querySelector('input').addEventListener('change', function(e) {
+                campusNamesEnabled = e.target.checked;
+                refreshCampusNames();
+            });
+            return box;
+        };
+        campusNameControl.addTo(map);
+        refreshCampusNames();
         function pop__5(feature, layer) {
             layer.on({
                 mouseout: function(e) {

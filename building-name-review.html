@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>建筑名称来源与待核说明</title>
+<style>body{font:16px/1.8 system-ui,"Microsoft YaHei",sans-serif;max-width:900px;margin:32px auto;padding:0 20px;color:#352d29}h1,h2{line-height:1.4}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ded8d4;padding:10px;text-align:left;vertical-align:top}a{color:#765140}small{color:#665d57}</style></head>
+<body><a href="index.html">← 返回校园地图</a><h1>建筑名称来源与待核说明</h1><p><strong>范围：中央民族大学丰台校区。整理日期：2026-10-21。</strong></p>
+<p>本次按建筑 FID 对照 campus-agent-main 中的丰台校区 curated GeoJSON 与地点目录；这些数据与本地建筑层使用同一组编号。原有 57 条有效要素已有名称，本次保留其文字，不声称已逐一经高德或实地确认。名称为“教师公寓”“商业区”等时，不自行编造逐栋楼号。图中原有几何坐标、楼层和图层归属均未改变。</p>
+<h2>覆盖情况</h2><ul><li>building 层共 64 条记录，其中 60 条有可定位几何；60 条现均有可显示名称。</li><li>FID 7、14、55、62 是空几何记录，保留原样，不补造建筑。</li><li>60 条有效要素中，FID 63 与 66 为田径场相关场地，并非两栋楼；因此不能把“60 条已命名要素”理解为“60 栋已核实正式楼名”。</li></ul>
+<h2>新增名称和需要核实的项目</h2><table><thead><tr><th>FID</th><th>显示名称</th><th>依据与限制</th></tr></thead><tbody>
+<tr><td>52、53</td><td>教学楼 †</td><td>官方校园图在相应东侧区域出现两处“教学楼”标注。此处采用图上的泛称，尚未核实对应学院、楼号或具体正式专名；不据邻近 OSM 点名推定名称。</td></tr>
+<tr><td>66</td><td>田径场内场</td><td>与 sport 层 FID 1 的几何完全重合，且包含在 FID 63“田径场”范围内。这是基于位置和几何关系的描述性名称，不是独立建筑正式名。暂保留原图层归属。</td></tr>
+<tr><td>54</td><td>副楼 †</td><td>原始数据和参考项目仅称“副楼”；本次未找到可确认的具体专名，沿用原值。</td></tr>
+<tr><td>56</td><td>明德楼+崇礼楼+共美厅 †</td><td>沿用原始复合体名称。官方图局部 OCR 出现“崇理楼”，与参考资料中的“崇礼楼”存在异文。OCR 不足以代替人工视觉或实地核实，暂不擅自更名或拆分几何。</td></tr>
+<tr><td>教师公寓等</td><td>沿用参考名称</td><td>每个 footprint 有名称且可在弹窗用 FID 区分，但没有证据的逐栋编号未被编造。</td></tr>
+</tbody></table>
+<h2>显示方式</h2><p>总览优先显示主要建筑，放大后逐步显示宿舍、公寓和小型附属建筑。最高缩放级别显示所有 60 条有效要素的名称；左下角可开关标签。点选建筑可查看名称状态、来源和说明。† 表示泛称或待核项，不表示正式楼名已经确认。</p>
+<h2>资料与使用边界</h2><ul>
+<li><a href="https://www.muc.edu.cn/xxgk1/xydt.htm" target="_blank" rel="noopener">中央民族大学官方校园地图页面</a></li>
+<li><a href="https://www.muc.edu.cn/__local/D/06/88/ED290FD6FCD89E0B4A6A5D0ADDA_11770E2B_26733.jpg" target="_blank" rel="noopener">官方丰台校区地图图片</a>：使用本地 OCR 辅助定位，未将 OCR 当作完整的逐栋正式名称证明。</li>
+<li>本地参考项目：campus-agent-main / apps/campus-web/data/campus-map 中的 curated/fengtai.geojson 与 places.source.json；参考项目说明以校方校园图核对名称。</li>
+<li>高德公开搜索页可访问，但本次未取得可逐栋匹配的高德建筑标签；不将“页面可打开”表述为“高德已核实”。不同地图可能使用不同坐标系，不能以未经转换的最近点直接更名。</li>
+<li>几何数据按参考项目的 <a href="https://www.openstreetmap.org/copyright">OpenStreetMap / ODbL 署名和许可说明</a> 使用。公开网页的数据可被下载。</li>
+</ul><p><small>原始 GeoPackage 与旧工程保留不变；本地另外提供命名 GeoPackage 和命名 QGIS 工程，以便回退和继续核实。</small></p></body></html>
