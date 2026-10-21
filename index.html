@@ -22,12 +22,26 @@
             width: 100%;
             height: 100vh;
             height: 100dvh;
+            background: #edf1ed;
         }
+        .leaflet-container { background: #edf1ed; }
+        .info {
+            padding: 9px 12px;
+            background: rgba(255,255,255,.94) !important;
+            color: #26362f !important;
+            border: 1px solid rgba(45,62,51,.12);
+            border-radius: 4px !important;
+            box-shadow: 0 2px 9px rgba(37,53,45,.12) !important;
+            font: 12px/1.5 "Microsoft YaHei",sans-serif;
+        }
+        .info h2 { margin: 0; font: 600 14px/1.4 "Microsoft YaHei",sans-serif; }
+        .info div { color: #65736b; font-size: 11px; }
+        .leaflet-tooltip.campus-building-label { margin: 0; }
         .campus-building-label {
             background: transparent;
             border: 0;
             box-shadow: none;
-            color: #3c2d27;
+            color: #293b43;
             font: 600 12px/1.3 "Microsoft YaHei", "Noto Sans SC", sans-serif;
             padding: 0;
             text-align: center;
@@ -36,17 +50,38 @@
         }
         .campus-building-label::before { display: none; }
         .campus-name-control {
-            background: rgba(255,255,255,.94);
-            padding: 8px 10px;
-            max-width: min(280px, 72vw);
-            border-radius: 4px;
-            color: #44332d;
+            width: 286px;
+            max-width: min(286px, calc(100vw - 32px));
+            max-height: min(48vh, 390px);
+            overflow-y: auto;
+            background: rgba(255,255,255,.97);
+            padding: 10px 12px;
+            border: 1px solid rgba(51,65,56,.12);
+            border-radius: 5px;
+            color: #303b36;
             font: 12px/1.5 "Microsoft YaHei", sans-serif;
-            box-shadow: 0 1px 5px #0004;
+            box-shadow: 0 2px 10px #25352d24;
         }
-        .campus-name-control label { cursor: pointer; font-weight: 600; }
-        .campus-name-control input { vertical-align: middle; }
-        .campus-name-control a { color: #735040; }
+        .campus-panel-title { margin: 0 0 8px; font-size: 13px; font-weight: 700; }
+        .campus-panel-toggles { display: flex; gap: 14px; flex-wrap: wrap; margin: 0 0 9px; }
+        .campus-name-control label { cursor: pointer; }
+        .campus-name-control input[type=checkbox] { vertical-align: middle; accent-color: #527d69; }
+        .campus-select-label { display: block; margin-bottom: 4px; font-weight: 600; }
+        .campus-name-control select { width: 100%; min-height: 34px; border: 1px solid #c8d0ca; border-radius: 3px; padding: 5px 7px; background: #fff; color: #26332d; font: inherit; }
+        .campus-selection-row { display: flex; gap: 8px; align-items: center; margin-top: 6px; min-height: 28px; }
+        .campus-selection-note { flex: 1; color: #52615a; }
+        .campus-clear-selection { border: 1px solid #c8d0ca; border-radius: 3px; background: #fff; color: #344139; padding: 4px 8px; font: inherit; cursor: pointer; }
+        .campus-clear-selection:disabled { opacity: .5; cursor: default; }
+        .campus-legend-title { margin: 9px 0 5px; padding-top: 7px; border-top: 1px solid #e1e6e2; font-weight: 700; }
+        .campus-legend { display: grid; grid-template-columns: 1fr 1fr; column-gap: 8px; row-gap: 4px; }
+        .campus-legend-item { display: flex; align-items: center; gap: 6px; min-width: 0; }
+        .campus-swatch { flex: 0 0 13px; width: 13px; height: 13px; border: 1px solid rgba(35,48,42,.32); border-radius: 2px; }
+        .campus-map-credit { padding: 2px 5px; background: rgba(255,255,255,.82); border-radius: 2px; color: #45514b; font: 10px/1.4 "Microsoft YaHei",sans-serif; }
+        .campus-map-credit a { color: inherit; }
+        @media (max-width: 650px) {
+            .campus-name-control { width: 266px; max-width: calc(100vw - 30px); max-height: 41vh; padding: 8px 10px; }
+            .campus-building-label { font-size: 11px; }
+        }
         </style>
         <title>中央民族大学丰台校区 · 建筑名称</title>
     </head>
@@ -72,29 +107,22 @@
         <script src="data/_5.js"></script>
         <script>
         var highlightLayer;
+        var selectedBuilding = null;
         function highlightFeature(e) {
             highlightLayer = e.target;
-
-            if (e.target.options.pane === 'pane__5') {
-                return;
-            }
-
+            if (e.target.options.pane === 'pane__5' || e.target.options.pane === 'pane__4') return;
             if (e.target.feature.geometry.type === 'LineString' || e.target.feature.geometry.type === 'MultiLineString') {
-              highlightLayer.setStyle({
-                color: 'rgba(255, 255, 0, 1.00)',
-              });
+                highlightLayer.setStyle({ color: '#727d78', opacity: 0.9 });
             } else {
-              highlightLayer.setStyle({
-                fillColor: 'rgba(255, 255, 0, 1.00)',
-                fillOpacity: 1
-              });
+                highlightLayer.setStyle({ fillColor: '#f0e3bc', fillOpacity: 0.86 });
             }
         }
         var map = L.map('map', {
             zoomControl:false, maxZoom:19, minZoom:14
         }).fitBounds([[39.80568409255671,116.10310136576231],[39.8142909422097,116.11805609538932]]);
         var hash = new L.Hash(map);
-        map.attributionControl.setPrefix('<a href="https://github.com/qgis2web/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        map.attributionControl.setPrefix('<a href="https://github.com/qgis2web/qgis2web" target="_blank">qgis2web</a> · <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> · <a href="https://qgis.org">QGIS</a>');
+        map.attributionControl.addAttribution('<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
         // remove popup's row if "visible-with-data"
         function removeEmptyRowsFromPopupContent(content, feature) {
@@ -175,7 +203,7 @@
             return this._div;
         };
         title.update = function () {
-            this._div.innerHTML = '<h2>校园地图</h2>';
+            this._div.innerHTML = '<h2>中央民族大学 · 丰台校区</h2><div>校园建筑导览</div>';
         };
         title.addTo(map);
         var zoomControl = L.control.zoom({
@@ -208,10 +236,10 @@
             maxNativeZoom: 19
         });
         layer_OpenStreetMap_0;
-        map.addLayer(layer_OpenStreetMap_0);
         function pop__1(feature, layer) {
             layer.on({
                 mouseout: function(e) {
+                    if (e.target === selectedBuilding) return;
                     for (var i in e.target._eventParents) {
                         if (typeof e.target._eventParents[i].resetStyle === 'function') {
                             e.target._eventParents[i].resetStyle(e.target);
@@ -237,14 +265,14 @@
             return {
                 pane: 'pane__1',
                 opacity: 1,
-                color: 'rgba(129,199,132,1.0)',
+                color: 'rgba(116,143,119,0.45)',
                 dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
-                weight: 1.0, 
+                weight: 0.7,
                 fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(165,214,167,1.0)',
+                fillOpacity: 0.28,
+                fillColor: 'rgba(180,202,176,0.34)',
                 interactive: true,
             }
         }
@@ -265,6 +293,7 @@
         function pop__2(feature, layer) {
             layer.on({
                 mouseout: function(e) {
+                    if (e.target === selectedBuilding) return;
                     for (var i in e.target._eventParents) {
                         if (typeof e.target._eventParents[i].resetStyle === 'function') {
                             e.target._eventParents[i].resetStyle(e.target);
@@ -290,14 +319,14 @@
             return {
                 pane: 'pane__2',
                 opacity: 1,
-                color: 'rgba(176,190,197,1.0)',
+                color: 'rgba(140,151,147,0.55)',
                 dashArray: '',
                 lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
+                lineJoin: 'round',
+                weight: 0.8,
                 fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(207,216,220,1.0)',
+                fillOpacity: 0.22,
+                fillColor: 'rgba(206,211,207,0.25)',
                 interactive: true,
             }
         }
@@ -318,6 +347,7 @@
         function pop__3(feature, layer) {
             layer.on({
                 mouseout: function(e) {
+                    if (e.target === selectedBuilding) return;
                     for (var i in e.target._eventParents) {
                         if (typeof e.target._eventParents[i].resetStyle === 'function') {
                             e.target._eventParents[i].resetStyle(e.target);
@@ -347,14 +377,14 @@
             return {
                 pane: 'pane__3',
                 opacity: 1,
-                color: 'rgba(100,181,246,1.0)',
+                color: 'rgba(120,148,145,0.5)',
                 dashArray: '',
                 lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
+                lineJoin: 'round',
+                weight: 0.8,
                 fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(144,202,249,1.0)',
+                fillOpacity: 0.28,
+                fillColor: 'rgba(163,196,190,0.34)',
                 interactive: true,
             }
         }
@@ -375,6 +405,7 @@
         function pop__4(feature, layer) {
             layer.on({
                 mouseout: function(e) {
+                    if (e.target === selectedBuilding) return;
                     for (var i in e.target._eventParents) {
                         if (typeof e.target._eventParents[i].resetStyle === 'function') {
                             e.target._eventParents[i].resetStyle(e.target);
@@ -387,6 +418,10 @@
                     <tr>\
                         <th scope="row">建筑名称</th>\
                         <td class="visible-with-data" id="name">' + (feature.properties['name'] !== null ? autolinker.link(String(feature.properties['name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">建筑类型</th>\
+                        <td class="visible-with-data" id="category">' + (feature.properties['category'] !== null ? feature.properties['category'] : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">楼层</th>\
@@ -416,6 +451,7 @@
                 addClassToPopupIfMedia(content, e.popup);
             });
             layer.bindPopup(content, { maxHeight: 400 });
+            layer.on('click', function() { selectCampusBuilding(layer, false); });
             if (feature.properties.name) {
                 var label = document.createElement('span');
                 var fid = String(feature.properties.fid);
@@ -428,18 +464,32 @@
             }
         }
 
-        function style__4_0() {
+        var campusCategoryPalette = {
+            '教学科研': { fill: '#6688a8', stroke: '#45647f' },
+            '住宿生活': { fill: '#df8b77', stroke: '#a85d4b' },
+            '餐饮': { fill: '#75a879', stroke: '#4c7951' },
+            '公共文化': { fill: '#d0ae58', stroke: '#967b36' },
+            '医疗服务': { fill: '#59a8a1', stroke: '#397d77' },
+            '商业服务': { fill: '#ad82aa', stroke: '#7a5878' },
+            '校园设施': { fill: '#93a1a8', stroke: '#65747c' },
+            '出入口安保': { fill: '#c9844f', stroke: '#925c32' },
+            '体育场地': { fill: '#4d9aa6', stroke: '#346e77' },
+            '综合/待核': { fill: '#a6a09a', stroke: '#736d68' },
+            '附属/待核': { fill: '#b8ad89', stroke: '#847a5c' }
+        };
+        function style__4_0(feature) {
+            var colors = campusCategoryPalette[feature.properties.category] || campusCategoryPalette['综合/待核'];
             return {
                 pane: 'pane__4',
                 opacity: 1,
-                color: 'rgba(141,110,99,1.0)',
+                color: colors.stroke,
                 dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 1.1,
                 fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(215,204,200,1.0)',
+                fillOpacity: 0.88,
+                fillColor: colors.fill,
                 interactive: true,
             }
         }
@@ -458,6 +508,12 @@
         bounds_group.addLayer(layer__4);
         map.addLayer(layer__4);
         var campusNamesEnabled = true;
+        var hiddenCampusCategories = new Set();
+        var campusBuildingByFid = new Map();
+        var campusCategoryCounts = {};
+        var campusFilterSelect;
+        var campusSelectionStatus;
+        var campusClearButton;
         function refreshCampusNames() {
             var visible = campusNamesEnabled && map.hasLayer(layer__4);
             if (!visible) {
@@ -489,21 +545,132 @@
                 if (layer.getTooltip() && !map.hasLayer(layer.getTooltip())) layer.openTooltip();
             });
         }
+        function clearCampusSelection() {
+            if (selectedBuilding) {
+                layer__4.resetStyle(selectedBuilding);
+                selectedBuilding = null;
+            }
+            map.closePopup();
+            if (campusFilterSelect) campusFilterSelect.value = '';
+            if (campusSelectionStatus) campusSelectionStatus.textContent = '点选地图上的建筑，或从列表定位';
+            if (campusClearButton) campusClearButton.disabled = true;
+        }
+        function selectCampusBuilding(layer, moveTo) {
+            if (!layer || !layer.feature || !layer.feature.properties) return;
+            if (selectedBuilding && selectedBuilding !== layer) layer__4.resetStyle(selectedBuilding);
+            selectedBuilding = layer;
+            layer.setStyle({ color: '#24372e', weight: 3.2, opacity: 1, fillOpacity: 0.96, dashArray: '5 2' });
+            layer.bringToFront();
+            if (campusFilterSelect) campusFilterSelect.value = String(layer.feature.properties.fid);
+            if (campusSelectionStatus) campusSelectionStatus.textContent = layer.feature.properties.name + ' · ' + layer.feature.properties.category;
+            if (campusClearButton) campusClearButton.disabled = false;
+            if (moveTo) {
+                map.fitBounds(layer.getBounds().pad(0.75), { maxZoom: 18, animate: true });
+                setTimeout(function() { layer.openPopup(); }, 180);
+            } else {
+                layer.openPopup();
+            }
+        }
+        function applyCampusCategoryFilters() {
+            campusBuildingByFid.forEach(function(layer) {
+                var category = layer.feature.properties.category;
+                var shouldShow = !hiddenCampusCategories.has(category);
+                if (shouldShow && !layer__4.hasLayer(layer)) layer__4.addLayer(layer);
+                if (!shouldShow && layer__4.hasLayer(layer)) layer__4.removeLayer(layer);
+            });
+            if (campusFilterSelect) {
+                Array.from(campusFilterSelect.querySelectorAll('option[value]')).forEach(function(option) {
+                    var targetLayer = campusBuildingByFid.get(option.value);
+                    option.disabled = !targetLayer || hiddenCampusCategories.has(targetLayer.feature.properties.category);
+                });
+            }
+            if (selectedBuilding && hiddenCampusCategories.has(selectedBuilding.feature.properties.category)) clearCampusSelection();
+            refreshCampusNames();
+        }
         map.on('zoomend', refreshCampusNames);
         map.on('layeradd layerremove', function(e) {
-            if (e.layer === layer__4) refreshCampusNames();
+            if (e.layer === layer__4) {
+                if (!map.hasLayer(layer__4) && selectedBuilding) clearCampusSelection();
+                refreshCampusNames();
+            }
         });
         var campusNameControl = L.control({ position: 'bottomleft' });
         campusNameControl.onAdd = function() {
             var box = L.DomUtil.create('div', 'campus-name-control');
-            box.innerHTML = '<label><input type="checkbox" id="campus-name-toggle" checked> 显示建筑名称</label>' +
-                '<div>放大查看更多楼名；† 表示泛称或待核项。</div>' +
-                '<a href="building-name-review.html" target="_blank" rel="noopener">查看名称来源与待核说明</a>';
+            box.innerHTML = '<div class="campus-panel-title">建筑导览</div>' +
+                '<div class="campus-panel-toggles"><label><input type="checkbox" id="campus-name-toggle" checked> 名称</label>' +
+                '<label><input type="checkbox" id="campus-basemap-toggle"> 街道底图</label></div>' +
+                '<label class="campus-select-label" for="campus-building-select">单栋建筑</label>' +
+                '<select id="campus-building-select"><option value="">选择名称或编号定位…</option></select>' +
+                '<div class="campus-selection-row"><span class="campus-selection-note" id="campus-selection-status">点选地图上的建筑，或从列表定位</span>' +
+                '<button type="button" class="campus-clear-selection" id="campus-clear-selection" disabled>清除</button></div>' +
+                '<div class="campus-legend-title">类型筛选</div><div class="campus-legend" id="campus-category-legend"></div>' +
+                '<div style="margin-top:8px"><a href="building-name-review.html" target="_blank" rel="noopener">名称来源与待核说明</a></div>';
             L.DomEvent.disableClickPropagation(box);
             L.DomEvent.disableScrollPropagation(box);
-            box.querySelector('input').addEventListener('change', function(e) {
+            campusFilterSelect = box.querySelector('#campus-building-select');
+            campusSelectionStatus = box.querySelector('#campus-selection-status');
+            campusClearButton = box.querySelector('#campus-clear-selection');
+            campusClearButton.addEventListener('click', clearCampusSelection);
+            campusFilterSelect.addEventListener('change', function(e) {
+                var found = campusBuildingByFid.get(e.target.value);
+                if (found && layer__4.hasLayer(found)) selectCampusBuilding(found, true);
+                else if (!e.target.value) clearCampusSelection();
+            });
+            box.querySelector('#campus-name-toggle').addEventListener('change', function(e) {
                 campusNamesEnabled = e.target.checked;
                 refreshCampusNames();
+            });
+            box.querySelector('#campus-basemap-toggle').addEventListener('change', function(e) {
+                if (e.target.checked) map.addLayer(layer_OpenStreetMap_0);
+                else map.removeLayer(layer_OpenStreetMap_0);
+            });
+            layer__4.eachLayer(function(layer) {
+                var props = layer.feature.properties;
+                var fid = String(props.fid);
+                campusBuildingByFid.set(fid, layer);
+                campusCategoryCounts[props.category] = (campusCategoryCounts[props.category] || 0) + 1;
+            });
+            Object.keys(campusCategoryCounts).sort().forEach(function(category) {
+                var group = document.createElement('optgroup');
+                group.label = category;
+                var legendLabel = document.createElement('label');
+                legendLabel.className = 'campus-legend-item';
+                var toggle = document.createElement('input');
+                toggle.type = 'checkbox';
+                toggle.checked = true;
+                toggle.setAttribute('data-campus-category', category);
+                toggle.setAttribute('aria-label', '显示' + category);
+                var swatch = document.createElement('span');
+                swatch.className = 'campus-swatch';
+                swatch.style.backgroundColor = campusCategoryPalette[category].fill;
+                var text = document.createElement('span');
+                text.textContent = category + ' (' + campusCategoryCounts[category] + ')';
+                legendLabel.appendChild(toggle);
+                legendLabel.appendChild(swatch);
+                legendLabel.appendChild(text);
+                box.querySelector('#campus-category-legend').appendChild(legendLabel);
+                toggle.addEventListener('change', function() {
+                    if (toggle.checked) hiddenCampusCategories.delete(category);
+                    else hiddenCampusCategories.add(category);
+                    applyCampusCategoryFilters();
+                });
+            });
+            Array.from(campusBuildingByFid.entries()).sort(function(a,b) {
+                return a[1].feature.properties.name.localeCompare(b[1].feature.properties.name, 'zh-CN') || Number(a[0])-Number(b[0]);
+            }).forEach(function(entry) {
+                var fid = entry[0];
+                var props = entry[1].feature.properties;
+                var option = document.createElement('option');
+                option.value = fid;
+                option.textContent = props.name.replace(/\+/g, ' · ') + ' · #' + fid;
+                group = campusFilterSelect.querySelector('optgroup[label="' + CSS.escape(props.category) + '"]');
+                if (!group) {
+                    group = document.createElement('optgroup');
+                    group.label = props.category;
+                    campusFilterSelect.appendChild(group);
+                }
+                group.appendChild(option);
             });
             return box;
         };
@@ -512,6 +679,7 @@
         function pop__5(feature, layer) {
             layer.on({
                 mouseout: function(e) {
+                    if (e.target === selectedBuilding) return;
                     for (var i in e.target._eventParents) {
                         if (typeof e.target._eventParents[i].resetStyle === 'function') {
                             e.target._eventParents[i].resetStyle(e.target);
@@ -541,11 +709,11 @@
             return {
                 pane: 'pane__5',
                 opacity: 1,
-                color: 'rgba(229,115,115,1.0)',
+                color: 'rgba(145,120,105,0.72)',
                 dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 8.0, 
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 4.0,
                 fillOpacity: 0,
                 interactive: true,
             }
