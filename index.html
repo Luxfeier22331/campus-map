@@ -52,17 +52,53 @@
         .campus-name-control {
             width: 286px;
             max-width: min(286px, calc(100vw - 32px));
-            max-height: min(48vh, 390px);
-            overflow-y: auto;
             background: rgba(255,255,255,.97);
             padding: 10px 12px;
             border: 1px solid rgba(51,65,56,.12);
-            border-radius: 5px;
+            border-radius: 12px;
             color: #303b36;
             font: 12px/1.5 "Microsoft YaHei", sans-serif;
-            box-shadow: 0 2px 10px #25352d24;
+            box-shadow: 0 8px 24px rgba(37,53,45,.14);
         }
-        .campus-panel-title { margin: 0 0 8px; font-size: 13px; font-weight: 700; }
+        .campus-name-control.is-collapsed {
+            width: auto;
+            max-width: calc(100vw - 32px);
+            padding: 0;
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+        .campus-panel-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 36px;
+            padding: 7px 14px;
+            border: 1px solid rgba(51,65,56,.14);
+            border-radius: 999px;
+            background: rgba(255,255,255,.97);
+            color: #303b36;
+            font: 600 12px/1.2 "Microsoft YaHei", sans-serif;
+            box-shadow: 0 2px 10px rgba(37,53,45,.16);
+            cursor: pointer;
+        }
+        .campus-panel-toggle:hover { background: #fff; }
+        .campus-name-control:not(.is-collapsed) .campus-panel-toggle {
+            width: 100%;
+            min-height: 0;
+            padding: 0 0 8px;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: left;
+        }
+        .campus-panel-chevron { flex: 0 0 auto; margin-left: auto; transition: transform .16s ease; }
+        .campus-name-control.is-collapsed .campus-panel-chevron { margin-left: 0; transform: rotate(180deg); }
+        .campus-panel-body { max-height: min(44vh, 352px); overflow-y: auto; }
+        .campus-panel-body[hidden] { display: none; }
         .campus-panel-toggles { display: flex; gap: 14px; flex-wrap: wrap; margin: 0 0 9px; }
         .campus-name-control label { cursor: pointer; }
         .campus-name-control input[type=checkbox] { vertical-align: middle; accent-color: #527d69; }
@@ -78,8 +114,68 @@
         .campus-swatch { flex: 0 0 13px; width: 13px; height: 13px; border: 1px solid rgba(35,48,42,.32); border-radius: 2px; }
         .campus-map-credit { padding: 2px 5px; background: rgba(255,255,255,.82); border-radius: 2px; color: #45514b; font: 10px/1.4 "Microsoft YaHei",sans-serif; }
         .campus-map-credit a { color: inherit; }
+        .leaflet-popup.campus-place-card { margin-bottom: 10px; }
+        .leaflet-popup.campus-place-card .leaflet-popup-content-wrapper {
+            padding: 0;
+            border: 1px solid rgba(38,52,45,.07);
+            border-radius: 14px;
+            background: #fff;
+            box-shadow: 0 12px 32px rgba(23,38,31,.18), 0 2px 6px rgba(23,38,31,.08);
+        }
+        .leaflet-popup.campus-place-card .leaflet-popup-content { margin: 0; width: auto !important; }
+        .leaflet-popup.campus-place-card .leaflet-popup-tip { display: none; }
+        .leaflet-popup.campus-place-card .leaflet-popup-close-button {
+            top: 9px;
+            right: 9px;
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            border-radius: 50%;
+            color: #65776d;
+            font: 400 16px/24px "Microsoft YaHei", sans-serif;
+            text-align: center;
+        }
+        .leaflet-popup.campus-place-card .leaflet-popup-close-button:hover { background: #f1f4f2; color: #2c3d34; }
+        .leaflet-popup.campus-place-card .leaflet-popup-content-wrapper { animation: campus-card-in .18s ease-out; }
+        @keyframes campus-card-in {
+            from { opacity: 0; transform: translateY(6px) scale(.985); }
+            to { opacity: 1; transform: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .leaflet-popup.campus-place-card .leaflet-popup-content-wrapper { animation: none; }
+        }
+        .campus-card {
+            width: 268px;
+            max-width: calc(100vw - 56px);
+            padding: 14px 15px 13px;
+            font: 13px/1.5 "Microsoft YaHei", sans-serif;
+            color: #22312a;
+        }
+        .campus-card-head { display: flex; align-items: flex-start; gap: 10px; padding-right: 20px; }
+        .campus-card-icon {
+            flex: 0 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #eef2ef;
+            color: #3d564a;
+        }
+        .campus-card-title h3 { margin: 0; font: 700 15px/1.3 "Microsoft YaHei", sans-serif; color: #1d2b24; }
+        .campus-card-sub { margin: 2px 0 0; color: #6b7d73; font-size: 11.5px; }
+        .campus-card-desc { margin: 10px 0 0; color: #42544b; font-size: 12px; line-height: 1.6; }
+        .campus-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
+        .campus-card-tag { padding: 2.5px 9px; border-radius: 999px; background: #f1f4f2; color: #4a5c52; font-size: 11px; }
+        .campus-card-meta { margin-top: 11px; padding-top: 8px; border-top: 1px solid #edf0ee; color: #64746b; font-size: 11px; line-height: 1.5; }
+        .campus-card-meta summary { color: #52685b; font-weight: 600; cursor: pointer; }
+        .campus-card-meta p { margin: 6px 0 0; overflow-wrap: anywhere; }
+        .campus-card-meta strong { color: #495b51; font-weight: 600; }
         @media (max-width: 650px) {
-            .campus-name-control { width: 266px; max-width: calc(100vw - 30px); max-height: 41vh; padding: 8px 10px; }
+            .campus-name-control { width: 266px; max-width: calc(100vw - 30px); padding: 8px 10px; }
+            .campus-name-control.is-collapsed { width: auto; padding: 0; }
+            .campus-panel-body { max-height: 38vh; }
             .campus-building-label { font-size: 11px; }
         }
         </style>
@@ -124,6 +220,56 @@
         map.attributionControl.setPrefix('<a href="https://github.com/qgis2web/qgis2web" target="_blank">qgis2web</a> · <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> · <a href="https://qgis.org">QGIS</a>');
         map.attributionControl.addAttribution('<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        function campusEscape(value) {
+            return String(value == null ? '' : value).replace(/[&<>"']/g, function(character) {
+                return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[character];
+            });
+        }
+        function campusShade(hex, amount) {
+            var value = String(hex || '').replace('#', '');
+            if (value.length === 3) value = value[0] + value[0] + value[1] + value[1] + value[2] + value[2];
+            if (value.length !== 6) return hex;
+            var parsed = parseInt(value, 16);
+            if (isNaN(parsed)) return hex;
+            var target = amount < 0 ? 0 : 255;
+            var ratio = Math.abs(amount);
+            var red = Math.round(((parsed >> 16) & 255) + (target - ((parsed >> 16) & 255)) * ratio);
+            var green = Math.round(((parsed >> 8) & 255) + (target - ((parsed >> 8) & 255)) * ratio);
+            var blue = Math.round((parsed & 255) + (target - (parsed & 255)) * ratio);
+            return '#' + ((1 << 24) + (red << 16) + (green << 8) + blue).toString(16).slice(1);
+        }
+        function buildCampusCard(input) {
+            var tags = (input.tags || []).filter(function(tag) { return tag; });
+            var metadata = (input.metadata || []).filter(function(item) { return item[1]; });
+            return '<div class="campus-card">' +
+                '<div class="campus-card-head">' +
+                    '<span class="campus-card-icon" aria-hidden="true">' +
+                        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+                            '<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>' +
+                    '</span>' +
+                    '<div class="campus-card-title"><h3>' + campusEscape(input.title) + '</h3>' +
+                        (input.subtitle ? '<p class="campus-card-sub">' + campusEscape(input.subtitle) + '</p>' : '') +
+                    '</div>' +
+                '</div>' +
+                (input.description ? '<p class="campus-card-desc">' + campusEscape(input.description) + '</p>' : '') +
+                (tags.length ? '<div class="campus-card-tags">' + tags.map(function(tag) {
+                    return '<span class="campus-card-tag">' + campusEscape(tag) + '</span>';
+                }).join('') + '</div>' : '') +
+                (metadata.length ? '<details class="campus-card-meta"><summary>名称来源与核对说明</summary>' + metadata.map(function(item) {
+                    return '<p><strong>' + campusEscape(item[0]) + '：</strong>' + campusEscape(item[1]) + '</p>';
+                }).join('') + '</details>' : '') +
+                '</div>';
+        }
+        function bindCampusCard(layer, html) {
+            layer.bindPopup(html, {
+                className: 'campus-place-card',
+                closeButton: true,
+                maxHeight: 320,
+                maxWidth: 300,
+                offset: [0, -4],
+                autoPanPadding: [18, 18]
+            });
+        }
         // remove popup's row if "visible-with-data"
         function removeEmptyRowsFromPopupContent(content, feature) {
          var tempDiv = document.createElement('div');
@@ -248,17 +394,6 @@
                 },
                 mouseover: highlightFeature,
             });
-            var popupContent = '<table>\
-                    <tr>\
-                        <th scope="row">绿地编号</th>\
-                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
         }
 
         function style__1_0() {
@@ -273,7 +408,7 @@
                 fill: true,
                 fillOpacity: 0.28,
                 fillColor: 'rgba(180,202,176,0.34)',
-                interactive: true,
+                interactive: false,
             }
         }
         map.createPane('pane__1');
@@ -281,7 +416,7 @@
         map.getPane('pane__1').style['mix-blend-mode'] = 'normal';
         var layer__1 = new L.geoJson(json__1, {
             attribution: '',
-            interactive: true,
+            interactive: false,
             dataVar: 'json__1',
             layerName: 'layer__1',
             pane: 'pane__1',
@@ -302,17 +437,6 @@
                 },
                 mouseover: highlightFeature,
             });
-            var popupContent = '<table>\
-                    <tr>\
-                        <th scope="row">道路编号</th>\
-                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
         }
 
         function style__2_0() {
@@ -327,7 +451,7 @@
                 fill: true,
                 fillOpacity: 0.22,
                 fillColor: 'rgba(206,211,207,0.25)',
-                interactive: true,
+                interactive: false,
             }
         }
         map.createPane('pane__2');
@@ -335,7 +459,7 @@
         map.getPane('pane__2').style['mix-blend-mode'] = 'normal';
         var layer__2 = new L.geoJson(json__2, {
             attribution: '',
-            interactive: true,
+            interactive: false,
             dataVar: 'json__2',
             layerName: 'layer__2',
             pane: 'pane__2',
@@ -356,21 +480,12 @@
                 },
                 mouseover: highlightFeature,
             });
-            var popupContent = '<table>\
-                    <tr>\
-                        <th scope="row">场地编号</th>\
-                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">场地名称</th>\
-                        <td class="visible-with-data" id="name">' + (feature.properties['name'] !== null ? autolinker.link(String(feature.properties['name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
+            var properties = feature.properties;
+            bindCampusCard(layer, buildCampusCard({
+                title: properties.name || '运动场地',
+                subtitle: '丰台校区 · 体育场地',
+                tags: ['体育场地', properties.fid != null ? '#' + properties.fid : '']
+            }));
         }
 
         function style__3_0() {
@@ -406,51 +521,27 @@
             layer.on({
                 mouseout: function(e) {
                     if (e.target === selectedBuilding) return;
-                    for (var i in e.target._eventParents) {
-                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
-                            e.target._eventParents[i].resetStyle(e.target);
-                        }
-                    }
+                    layer__4.resetStyle(e.target);
                 },
-                mouseover: highlightFeature,
+                mouseover: function(e) {
+                    if (e.target === selectedBuilding) return;
+                    var hoverColors = campusCategoryPalette[e.target.feature.properties.category] || campusCategoryPalette['综合/待核'];
+                    e.target.setStyle({ color: campusShade(hoverColors.stroke, -0.12), weight: 2, fillOpacity: 0.96 });
+                },
             });
-            var popupContent = '<table>\
-                    <tr>\
-                        <th scope="row">建筑名称</th>\
-                        <td class="visible-with-data" id="name">' + (feature.properties['name'] !== null ? autolinker.link(String(feature.properties['name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">建筑类型</th>\
-                        <td class="visible-with-data" id="category">' + (feature.properties['category'] !== null ? feature.properties['category'] : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">楼层</th>\
-                        <td class="visible-with-data" id="floor">' + (feature.properties['floor'] !== null ? autolinker.link(String(feature.properties['floor']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">建筑编号</th>\
-                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-            var details = document.createElement('div');
-            details.innerHTML = content;
-            var table = details.querySelector('table');
-            [['名称状态', 'name_status'], ['名称来源', 'name_source'], ['核对说明', 'name_note']].forEach(function(item) {
-                var value = feature.properties[item[1]];
-                if (!value) return;
-                var row = table.insertRow();
-                var heading = document.createElement('th');
-                heading.scope = 'row';
-                heading.textContent = item[0];
-                row.appendChild(heading);
-                row.insertCell().textContent = value;
-            });
-            content = details.innerHTML;
-            layer.on('popupopen', function(e) {
-                addClassToPopupIfMedia(content, e.popup);
-            });
-            layer.bindPopup(content, { maxHeight: 400 });
+            var properties = feature.properties;
+            var floorText = properties.floor ? properties.floor + ' 层' : '';
+            bindCampusCard(layer, buildCampusCard({
+                title: properties.name || '未命名建筑',
+                subtitle: '丰台校区 · ' + (properties.category || '待核'),
+                description: floorText ? '楼层信息：' + floorText : '',
+                tags: [properties.category, properties.fid != null ? '编号 #' + properties.fid : ''],
+                metadata: [
+                    ['名称状态', properties.name_status],
+                    ['名称来源', properties.name_source],
+                    ['核对说明', properties.name_note]
+                ]
+            }));
             layer.on('click', function() { selectCampusBuilding(layer, false); });
             if (feature.properties.name) {
                 var label = document.createElement('span');
@@ -559,7 +650,15 @@
             if (!layer || !layer.feature || !layer.feature.properties) return;
             if (selectedBuilding && selectedBuilding !== layer) layer__4.resetStyle(selectedBuilding);
             selectedBuilding = layer;
-            layer.setStyle({ color: '#24372e', weight: 3.2, opacity: 1, fillOpacity: 0.96, dashArray: '5 2' });
+            var selectedColors = campusCategoryPalette[layer.feature.properties.category] || campusCategoryPalette['综合/待核'];
+            layer.setStyle({
+                color: selectedColors.stroke,
+                weight: 1.1,
+                opacity: 1,
+                fillColor: campusShade(selectedColors.fill, -0.22),
+                fillOpacity: 1,
+                dashArray: ''
+            });
             layer.bringToFront();
             if (campusFilterSelect) campusFilterSelect.value = String(layer.feature.properties.fid);
             if (campusSelectionStatus) campusSelectionStatus.textContent = layer.feature.properties.name + ' · ' + layer.feature.properties.category;
@@ -596,8 +695,13 @@
         });
         var campusNameControl = L.control({ position: 'bottomleft' });
         campusNameControl.onAdd = function() {
-            var box = L.DomUtil.create('div', 'campus-name-control');
-            box.innerHTML = '<div class="campus-panel-title">建筑导览</div>' +
+            var box = L.DomUtil.create('div', 'campus-name-control is-collapsed');
+            box.innerHTML = '<button type="button" class="campus-panel-toggle" id="campus-panel-toggle" aria-expanded="false" aria-controls="campus-panel-body">' +
+                '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>' +
+                '<span>建筑导览</span>' +
+                '<svg class="campus-panel-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>' +
+                '</button>' +
+                '<div class="campus-panel-body" id="campus-panel-body" hidden>' +
                 '<div class="campus-panel-toggles"><label><input type="checkbox" id="campus-name-toggle" checked> 名称</label>' +
                 '<label><input type="checkbox" id="campus-basemap-toggle"> 街道底图</label></div>' +
                 '<label class="campus-select-label" for="campus-building-select">单栋建筑</label>' +
@@ -605,13 +709,26 @@
                 '<div class="campus-selection-row"><span class="campus-selection-note" id="campus-selection-status">点选地图上的建筑，或从列表定位</span>' +
                 '<button type="button" class="campus-clear-selection" id="campus-clear-selection" disabled>清除</button></div>' +
                 '<div class="campus-legend-title">类型筛选</div><div class="campus-legend" id="campus-category-legend"></div>' +
-                '<div style="margin-top:8px"><a href="building-name-review.html" target="_blank" rel="noopener">名称来源与待核说明</a></div>';
+                '<div style="margin-top:8px"><a href="building-name-review.html" target="_blank" rel="noopener">名称来源与待核说明</a></div>' +
+                '</div>';
             L.DomEvent.disableClickPropagation(box);
             L.DomEvent.disableScrollPropagation(box);
             campusFilterSelect = box.querySelector('#campus-building-select');
             campusSelectionStatus = box.querySelector('#campus-selection-status');
             campusClearButton = box.querySelector('#campus-clear-selection');
             campusClearButton.addEventListener('click', clearCampusSelection);
+            var campusPanelToggle = box.querySelector('#campus-panel-toggle');
+            var campusPanelBody = box.querySelector('#campus-panel-body');
+            function setCampusPanelExpanded(expanded) {
+                campusPanelBody.hidden = !expanded;
+                campusPanelToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+                if (expanded) box.classList.remove('is-collapsed');
+                else box.classList.add('is-collapsed');
+            }
+            campusPanelToggle.addEventListener('click', function() {
+                setCampusPanelExpanded(campusPanelBody.hidden);
+            });
+            setCampusPanelExpanded(false);
             campusFilterSelect.addEventListener('change', function(e) {
                 var found = campusBuildingByFid.get(e.target.value);
                 if (found && layer__4.hasLayer(found)) selectCampusBuilding(found, true);
@@ -675,47 +792,23 @@
             return box;
         };
         campusNameControl.addTo(map);
+        map.on('click', function(e) {
+            var target = e.originalEvent && e.originalEvent.target;
+            if (target && target.closest && target.closest('.leaflet-interactive')) return;
+            clearCampusSelection();
+        });
         refreshCampusNames();
-        function pop__5(feature, layer) {
-            layer.on({
-                mouseout: function(e) {
-                    if (e.target === selectedBuilding) return;
-                    for (var i in e.target._eventParents) {
-                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
-                            e.target._eventParents[i].resetStyle(e.target);
-                        }
-                    }
-                },
-                mouseover: highlightFeature,
-            });
-            var popupContent = '<table>\
-                    <tr>\
-                        <th scope="row">校园名称</th>\
-                        <td class="visible-with-data" id="name">' + (feature.properties['name'] !== null ? autolinker.link(String(feature.properties['name']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">边界编号</th>\
-                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(String(feature.properties['fid']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
         function style__5_0() {
             return {
                 pane: 'pane__5',
                 opacity: 1,
-                color: 'rgba(145,120,105,0.72)',
+                color: 'rgba(102,116,108,0.58)',
                 dashArray: '',
                 lineCap: 'round',
                 lineJoin: 'round',
-                weight: 4.0,
-                fillOpacity: 0,
-                interactive: true,
+                weight: 1.5,
+                fill: false,
+                interactive: false,
             }
         }
         map.createPane('pane__5');
@@ -723,11 +816,10 @@
         map.getPane('pane__5').style['mix-blend-mode'] = 'normal';
         var layer__5 = new L.geoJson(json__5, {
             attribution: '',
-            interactive: true,
+            interactive: false,
             dataVar: 'json__5',
             layerName: 'layer__5',
             pane: 'pane__5',
-            onEachFeature: pop__5,
             style: style__5_0,
         });
         bounds_group.addLayer(layer__5);
