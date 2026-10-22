@@ -135,7 +135,7 @@
         .campus-surface-key { display: flex; flex-wrap: wrap; gap: 5px 10px; margin-top: 9px; padding-top: 8px; border-top: 1px solid #e1e6e2; color: #52615a; font-size: 11px; }
         .campus-surface-key span { display: inline-flex; align-items: center; gap: 4px; }
         .campus-map-swatch { display: inline-block; vertical-align: middle; width: 13px; height: 13px; flex: 0 0 13px; border: 1px solid rgba(35,48,42,.45); border-radius: 2px; }
-        .campus-map-swatch-green { background: radial-gradient(#4b8540 1px, transparent 1.2px) 0 0 / 7px 7px, #b8e3a1; }
+        .campus-map-swatch-green { background: #c9ddb5; border-color: #b0c69f; }
         .campus-map-swatch-turf { background: repeating-linear-gradient(0deg, #d9f2bf 0 2px, #4eae5b 2px 8px); }
         .campus-map-swatch-court { background: repeating-linear-gradient(45deg, #76bfc9 0 5px, #d4edf0 5px 6px); }
         .campus-map-swatch-track { background: repeating-linear-gradient(0deg, #c77963 0 6px, #f4d5c8 6px 7px); }
@@ -250,11 +250,6 @@
         var map = L.map('map', {
             zoomControl:false, maxZoom:19, minZoom:14
         }).fitBounds([[39.80568409255671,116.10310136576231],[39.8142909422097,116.11805609538932]]);
-        var campusGreenPattern = new L.Pattern({ width: 14, height: 14 });
-        campusGreenPattern.addShape(new L.PatternRect({ x: 0, y: 0, width: 14, height: 14, stroke: false, fill: true, fillColor: '#b8e3a1', fillOpacity: 1 }));
-        campusGreenPattern.addShape(new L.PatternCircle({ x: 3, y: 3, radius: 1.15, stroke: false, fill: true, fillColor: '#4b8540', fillOpacity: 0.72 }));
-        campusGreenPattern.addShape(new L.PatternCircle({ x: 10, y: 10, radius: 1.15, stroke: false, fill: true, fillColor: '#4b8540', fillOpacity: 0.72 }));
-        campusGreenPattern.addTo(map);
         var campusSportsPattern = new L.StripePattern({ width: 12, height: 12, weight: 2, spaceWeight: 10, color: '#d9f2bf', spaceColor: '#4eae5b', opacity: 1, spaceOpacity: 1 });
         campusSportsPattern.addTo(map);
         var campusCourtPattern = new L.Pattern({ width: 16, height: 16 });
@@ -441,15 +436,14 @@
             return {
                 pane: 'pane__1',
                 opacity: 1,
-                color: 'rgba(67,119,58,0.96)',
+                color: 'rgba(156,181,137,0.65)',
                 dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.1,
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 0.6,
                 fill: true,
-                fillOpacity: 0.96,
-                fillColor: '#b8e3a1',
-                fillPattern: campusGreenPattern,
+                fillOpacity: 1,
+                fillColor: '#c9ddb5',
                 interactive: false,
             }
         }
