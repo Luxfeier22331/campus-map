@@ -295,17 +295,15 @@
     }
 
     function createNames() {
-        const major = new Set(['5', '6', '23', '40', '41', '47', '48', '49', '50', '51', '52', '53', '56', '59', '63']);
-        const small = new Set(['42', '43', '44', '45', '46', '54', '57', '58', '60', '61']);
         const reviewed = new Set(['52', '53', '54', '56']);
         data.buildings.features.forEach(function (feature) {
             const p = feature.properties;
-            if (!p.name || /南门|北门/.test(p.name)) return;
+            if (!p.name) return;
             const label = element('span', 'campus-building-label', p.name.replace(/\+/g, ' · ') + (reviewed.has(feature.id) ? ' †' : ''));
             label.setAttribute('data-building-label', feature.id);
             label.setAttribute('aria-hidden', 'true');
             const marker = new maplibregl.Marker({ element: label }).setLngLat(featureCenter(feature)).addTo(map);
-            labelMarkers.push({ marker: marker, feature: feature, minZoom: major.has(feature.id) ? 17 : small.has(feature.id) ? 19 : 18 });
+            labelMarkers.push({ marker: marker, feature: feature });
         });
         ['北门', '南门'].forEach(function (name) {
             const features = data.buildings.features.filter(function (feature) { return (feature.properties.name || '').indexOf(name) !== -1; });
@@ -331,9 +329,8 @@
 
     function refreshNames() {
         if (!initialized) return;
-        const zoom = map.getZoom();
-        labelMarkers.forEach(function (entry) { entry.marker.getElement().hidden = !state.namesVisible || zoom < entry.minZoom || !buildingVisible(entry.feature); });
-        gateMarkers.forEach(function (entry) { entry.marker.getElement().hidden = !state.namesVisible || zoom < 15 || !entry.features.some(buildingVisible); });
+        labelMarkers.forEach(function (entry) { entry.marker.getElement().hidden = !state.namesVisible || !buildingVisible(entry.feature); });
+        gateMarkers.forEach(function (entry) { entry.marker.getElement().hidden = !state.namesVisible || !entry.features.some(buildingVisible); });
     }
 
     function setNamesVisible(visible) { state.namesVisible = Boolean(visible); ui.names.checked = state.namesVisible; refreshNames(); }
