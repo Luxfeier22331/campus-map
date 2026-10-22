@@ -1,0 +1,96 @@
+:root { color-scheme: light; font-family: "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif; color: #303b36; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; }
+body { overflow: hidden; background: #edf1ed; }
+[hidden] { display: none !important; }
+button, select, input { font: inherit; }
+button, summary { -webkit-tap-highlight-color: transparent; }
+button, select, summary, a, input { outline-offset: 3px; }
+button:focus-visible, select:focus-visible, summary:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid #416b55; }
+button { cursor: pointer; }
+input[type="checkbox"] { accent-color: #527d69; vertical-align: middle; }
+#map { position: absolute; inset: 0; width: 100%; height: 100vh; height: 100dvh; background: #edf1ed; }
+.maplibregl-map { font: 12px/1.5 "Microsoft YaHei", system-ui, sans-serif; }
+.maplibregl-ctrl-group { border: 1px solid rgba(45,62,51,.12); border-radius: 8px; box-shadow: 0 2px 9px rgba(37,53,45,.12); }
+.maplibregl-ctrl-group button { width: 34px; height: 34px; }
+.campus-tool-control button svg { width: 18px; height: 18px; margin: 7px; color: #344c3e; }
+.campus-tool-control button[aria-pressed="true"] { background: #e5eee6; }
+.info { position: absolute; z-index: 2; top: max(12px, env(safe-area-inset-top)); right: 12px; max-width: calc(100vw - 76px); padding: 9px 12px; background: rgba(255,255,255,.95); border: 1px solid rgba(45,62,51,.12); border-radius: 8px; box-shadow: 0 2px 9px rgba(37,53,45,.12); }
+.info h1 { margin: 0; color: #26362f; font-size: 14px; line-height: 1.5; font-weight: 600; }
+.info p { margin: 2px 0 0; color: #65736b; font-size: 11px; }
+.engine-badge { display: inline-block; margin-left: 5px; padding: 0 5px; border: 1px solid #dae4dc; border-radius: 4px; font-size: 9px; vertical-align: 1px; }
+.map-status { position: absolute; z-index: 3; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 10px 16px; border-radius: 8px; background: rgba(255,255,255,.96); box-shadow: 0 3px 20px #25352d1f; font-size: 13px; }
+.map-error { position: absolute; z-index: 10; top: 105px; left: 70px; right: 12px; max-width: 460px; margin: auto; padding: 14px; border: 1px solid #dbb6aa; border-radius: 10px; background: #fff9f5; color: #783e29; font-size: 13px; line-height: 1.6; }
+.campus-layer-control { position: absolute; top: 90px; right: 12px; z-index: 2; min-width: 52px; padding: 7px 10px; background: rgba(255,255,255,.97); border: 1px solid rgba(51,65,56,.14); border-radius: 8px; box-shadow: 0 2px 10px #25352d1f; font-size: 12px; }
+.campus-layer-control summary { cursor: pointer; font-weight: 600; }
+.campus-layer-list { display: grid; gap: 8px; padding: 10px 0 3px; }
+.campus-layer-list label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.campus-name-control { position: absolute; z-index: 3; left: max(12px, env(safe-area-inset-left)); bottom: max(40px, calc(env(safe-area-inset-bottom) + 30px)); width: 310px; max-width: calc(100vw - 24px); padding: 10px 12px; border: 1px solid rgba(51,65,56,.12); border-radius: 12px; background: rgba(255,255,255,.97); box-shadow: 0 8px 24px #25352d24; font: 12px/1.5 "Microsoft YaHei", sans-serif; }
+.campus-name-control.is-collapsed { width: auto; padding: 0; border: 0; background: transparent; box-shadow: none; }
+.campus-panel-toggle { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 7px 14px; border: 1px solid rgba(51,65,56,.14); border-radius: 999px; background: rgba(255,255,255,.97); color: #303b36; box-shadow: 0 2px 10px #25352d29; font-size: 12px; font-weight: 600; }
+.campus-panel-toggle:hover { background: #fff; }
+.campus-name-control:not(.is-collapsed) .campus-panel-toggle { width: 100%; min-height: 0; padding: 0 0 8px; border: 0; border-radius: 0; background: transparent; box-shadow: none; text-align: left; font-size: 13px; font-weight: 700; }
+.campus-panel-chevron { margin-left: auto; transition: transform .16s ease; }
+.campus-name-control:not(.is-collapsed) .campus-panel-chevron { transform: rotate(180deg); }
+.campus-panel-body { max-height: min(44vh, 375px); overflow-y: auto; overscroll-behavior: contain; }
+.campus-panel-toggles { display: flex; gap: 14px; margin-bottom: 9px; }
+.campus-name-control label { cursor: pointer; }
+.campus-select-label { display: block; margin-bottom: 4px; font-weight: 600; }
+.campus-name-control select { width: 100%; min-height: 34px; padding: 5px 7px; border: 1px solid #c8d0ca; border-radius: 5px; color: #26332d; background: #fff; }
+.campus-selection-row { display: flex; align-items: center; gap: 8px; min-height: 28px; margin-top: 6px; }
+.campus-selection-note { flex: 1; color: #52615a; }
+.campus-clear-selection { padding: 4px 8px; border: 1px solid #c8d0ca; border-radius: 4px; color: #344139; background: #fff; }
+.campus-clear-selection:disabled { opacity: .5; cursor: default; }
+.campus-legend-title { margin: 9px 0 5px; padding-top: 7px; border-top: 1px solid #e1e6e2; font-weight: 700; }
+.campus-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 8px; }
+.campus-legend-item { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.campus-map-swatch { display: inline-block; flex: 0 0 13px; width: 13px; height: 13px; border: 1px solid rgba(35,48,42,.4); border-radius: 2px; vertical-align: middle; }
+.campus-map-swatch-green { background: #E1F2D6; border-color: #b0c69f; }
+.campus-map-swatch-roads { background: #d3d8d4; }
+.campus-map-swatch-turf { background: repeating-linear-gradient(0deg, #d9f2bf 0 2px, #4eae5b 2px 8px); }
+.campus-map-swatch-court { background: repeating-linear-gradient(45deg, #76bfc9 0 5px, #d4edf0 5px 6px); }
+.campus-map-swatch-track { background: repeating-linear-gradient(0deg, #c77963 0 6px, #f4d5c8 6px 7px); }
+.campus-map-swatch-sports { background: linear-gradient(90deg, #4eae5b 0 33%, #76bfc9 33% 66%, #c77963 66%); }
+.campus-map-swatch-gates { background: linear-gradient(90deg, #216c94 0 50%, #b34b29 50%); }
+.campus-surface-key { display: flex; flex-wrap: wrap; gap: 5px 10px; margin-top: 9px; padding-top: 8px; border-top: 1px solid #e1e6e2; color: #52615a; font-size: 11px; }
+.campus-surface-key span { display: inline-flex; align-items: center; gap: 4px; }
+.campus-source-link { margin: 8px 0 0; }
+.campus-source-link a { color: #416b55; }
+.campus-building-label { color: #293b43; font: 600 12px/1.3 "Microsoft YaHei", "Noto Sans SC", sans-serif; white-space: nowrap; text-align: center; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 0 0 4px #fff; pointer-events: none; }
+.campus-gate-marker { display: inline-flex; align-items: center; gap: 4px; min-height: 36px; padding: 3px 10px; border: 1px solid currentColor; border-radius: 6px; color: #fff; box-shadow: 0 2px 5px #19271f3d; font: 700 12px/1.3 "Microsoft YaHei", sans-serif; white-space: nowrap; }
+.campus-gate-marker[data-gate="north"] { background: #216c94; border-color: #185673; }
+.campus-gate-marker[data-gate="south"] { background: #b34b29; border-color: #963c1e; }
+.campus-gate-marker:focus-visible { outline: 3px solid #293b43; outline-offset: 3px; }
+.campus-gate-arrow { font-size: 15px; line-height: 1; }
+.campus-place-card .maplibregl-popup-content { padding: 0; border: 1px solid rgba(38,52,45,.07); border-radius: 14px; background: #fff; box-shadow: 0 12px 32px #17261f2e, 0 2px 6px #17261f14; animation: campus-card-in .18s ease-out; }
+.campus-place-card .maplibregl-popup-tip { display: none; }
+.campus-place-card .maplibregl-popup-close-button { top: 9px; right: 9px; width: 24px; height: 24px; padding: 0; border-radius: 50%; color: #65776d; font: 400 18px/24px sans-serif; }
+.campus-place-card .maplibregl-popup-close-button:hover { background: #f1f4f2; color: #2c3d34; }
+.campus-card { width: 298px; max-width: calc(100vw - 44px); max-height: min(360px, 65vh); padding: 14px 15px 13px; overflow-y: auto; overscroll-behavior: contain; color: #22312a; font: 13px/1.5 "Microsoft YaHei", sans-serif; }
+.campus-card-head { display: flex; align-items: flex-start; gap: 10px; padding-right: 20px; }
+.campus-card-icon { display: flex; flex: 0 0 32px; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; color: #3d564a; background: #eef2ef; }
+.campus-card-title h2 { margin: 0; color: #1d2b24; font-size: 15px; line-height: 1.3; }
+.campus-card-sub { margin: 2px 0 0; color: #6b7d73; font-size: 11.5px; }
+.campus-card-desc { margin: 10px 0 0; color: #42544b; font-size: 12px; line-height: 1.6; }
+.campus-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
+.campus-card-tag { padding: 2.5px 9px; border-radius: 999px; color: #4a5c52; background: #f1f4f2; font-size: 11px; }
+.campus-card-meta { margin-top: 11px; padding-top: 8px; border-top: 1px solid #edf0ee; color: #64746b; font-size: 11px; line-height: 1.5; }
+.campus-card-meta summary { color: #52685b; font-weight: 600; cursor: pointer; }
+.campus-card-meta p { margin: 6px 0 0; overflow-wrap: anywhere; }
+.measure-panel { position: absolute; z-index: 4; top: 195px; left: 52px; width: 255px; max-width: calc(100vw - 66px); padding: 10px; border: 1px solid #c8d0ca; border-radius: 8px; background: rgba(255,255,255,.97); box-shadow: 0 4px 18px #25352d24; font-size: 12px; }
+.measure-modes { display: flex; gap: 5px; }
+.measure-panel button { padding: 5px 7px; border: 1px solid #ccd6cd; border-radius: 4px; color: #344139; background: #fff; }
+.measure-modes button[aria-pressed="true"] { background: #dfeadf; border-color: #63876c; }
+#measure-close { margin-left: auto; }
+#measure-result { min-height: 36px; margin: 8px 0; line-height: 1.5; }
+@keyframes campus-card-in { from { opacity: 0; transform: translateY(6px) scale(.985); } to { opacity: 1; transform: none; } }
+@media (max-width: 650px) {
+    .info { padding: 7px 9px; }
+    .info h1 { font-size: 12px; }
+    .engine-badge { font-size: 8px; }
+    .campus-layer-control { top: 82px; }
+    .campus-name-control:not(.is-collapsed) { width: 286px; padding: 8px 10px; }
+    .campus-panel-body { max-height: 38vh; }
+    .campus-building-label { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) { .campus-place-card .maplibregl-popup-content { animation: none; } .campus-panel-chevron { transition: none; } }

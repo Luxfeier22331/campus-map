@@ -1,0 +1,39 @@
+{
+  "package": "maplibre-gl",
+  "version": "4.7.1",
+  "license": "BSD-3-Clause",
+  "runtimeVersionCheck": "Offline Node load: maplibregl.getVersion() === '4.7.1'; .version is not an exported property in this upstream release.",
+  "cssResourceAudit": { "urlReferences": 37, "dataUriReferences": 37, "externalResourceReferences": 0 },
+  "licenseEquivalence": "package/LICENSE.txt and package/dist/LICENSE.txt are byte-identical.",
+  "registryVersionUrl": "https://registry.npmjs.org/maplibre-gl/4.7.1",
+  "tarballUrl": "https://registry.npmjs.org/maplibre-gl/-/maplibre-gl-4.7.1.tgz",
+  "tarballBytes": 7989733,
+  "npmIntegrity": "sha512-lgL7XpIwsgICiL82ITplfS7IGwrB1OJIw/pCvprDp2dhmSSEBgmPzYRvwYYYvJGJD7fxUv1Tvpih4nZ6VrLuaA==",
+  "npmIntegrityVerified": true,
+  "npmShasum": "06a524438ee2aafbe8bcd91002a4e01468ea5486",
+  "npmShasumVerified": true,
+  "upstreamGitHead": "87486a5ef2085e600e8fa4e31252629dd8488dcd",
+  "files": {
+    "maplibre-gl.js": {
+      "sourceMember": "package/dist/maplibre-gl.js",
+      "bytes": 803086,
+      "sha256": "be9633c4d870e26fb37f1cfe5c5a77181667114003ea16207ac7850d8da8add1"
+    },
+    "maplibre-gl.css": {
+      "sourceMember": "package/dist/maplibre-gl.css",
+      "bytes": 65534,
+      "sha256": "576b085fdd9487a65a19215328c1e086c07ce5bf6da09b666b3806d3d008dae9"
+    },
+    "LICENSE.txt": {
+      "sourceMember": "package/LICENSE.txt",
+      "bytes": 5984,
+      "sha256": "ee5fc05a0677eaf69601d2c7db0d9ecd6cc27c3abc1d0733bc9ed34707cf8ef2"
+    }
+  },
+  "extraction": "Unmodified bytes extracted from named regular files after verification. No npm install or bundler used.",
+  "runtimeNotes": [
+    "Main UMD bundle embeds its worker source; separate worker download is not required for normal non-CSP runtime.",
+    "No glyph, sprite, tile or style assets are bundled or configured. The application must use its own local/in-memory style, images and data.",
+    "Upstream source-map references are retained unchanged; source maps are not part of the runtime and are not vendored."
+  ]
+}
